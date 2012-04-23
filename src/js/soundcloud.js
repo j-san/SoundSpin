@@ -24,33 +24,37 @@
 		});
 	});
 
-
-	window.MainController = function($elt){
-		var panelType = $elt.data('panelType');
-		var title = $elt.data('title') || $elt.text() || $elt.attr('title');
-		var $body;
+	$(window).bind('hashchange',function(){
+		MainController(location.hash);
+	});
+	window.MainController = function(ressource){
+		if(typeof location == 'string') {
+			var params = location.split('/');
+		} else {
+			var params = (ressource.prop('href') || 'home').split('/');
+		}
+		var panelType = params.shift();
 		console.log(panelType);
-		_gaq.push(['_trackEvent', 'loadpanel', panelType, title]);
-		if(!$player){
+		var $body;
+		_gaq.push(['_trackEvent', 'loadpanel', panelType]);
+		if(!$player) {
 			$body = Home();
-			title = 'Home';
-		}else if(panelType == 'songwriterDetails'){
-			$body = songwriterDetails($elt.data('user'));
-		}else if(panelType == 'songwriterSearch'){
+		} else if(panelType == 'songwriterDetails') {
+			$body = songwriterDetails(params.shift());
+		} else if(panelType == 'songwriterSearch') {
 			$body = songwriterSearch();
-		}else if(panelType == 'followings'){
-			$body = songwriterFollowings($elt.data('user'));
-		}else if(panelType == 'favorites'){
-			$body = favorites($elt.data('user'));
-		}else if(panelType == 'allTracks'){
-			$body = allTracks($elt.data('user'));
-		}else if(panelType == 'albumDetails'){
-			$body = albumDetails($elt.data('album'), $elt.data('user'));
-			
-		}else{
+		} else if(panelType == 'followings') {
+			$body = songwriterFollowings(params.shift());
+		} else if(panelType == 'favorites') {
+			$body = favorites(params.shift());
+		} else if(panelType == 'allTracks') {
+			$body = allTracks(params.shift());
+		} else if(panelType == 'albumDetails') {
+			$body = albumDetails(params.shift(), params.shift());
+		} else {
 			$.error('no panel specified');
 		}
-		$panel = $.spin($body, title);
+		$panel = $.spin($body);
 	};
 
 	var Home = function(){
