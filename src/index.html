@@ -9,7 +9,7 @@
 		<!-- <link rel="icon" type="image/png" href="images/kaiten-boxed-favicon.png" sizes="16x16"> -->
 
 		<link rel="stylesheet" type="text/css" href="../lib/Spin.js/addons/breadcrumb/breadcrumb.css" />
-		<link rel="stylesheet" type="text/css" href="../lib/Spin.js/addons/items/items.css" />
+		<link rel="stylesheet" type="text/css" href="../lib/Spin.js/addons/navigation/navigation.css" />
 		<link rel="stylesheet" type="text/css" href="css/soundcloud.css" />
 
 
@@ -19,14 +19,15 @@
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.js"> </script>
 
 		<script type="text/javascript" src="../lib/Spin.js/addons/breadcrumb/breadcrumb.js"> </script>
-		<script type="text/javascript" src="../lib/Spin.js/addons/items/items.js"> </script>
+		<script type="text/javascript" src="../lib/Spin.js/addons/navigation/navigation.js"> </script>
 		<script type="text/javascript" src="../lib/Spin.js/src/js/Spin.js"> </script>
 		<script type="text/javascript" src="../lib/JPath/src/JPath.js"> </script>
 		<script type="text/javascript" src="../lib/JTmpl/src/JTmpl.js"> </script>
 
 
-		<script type="text/javascript" src="js/soundcloud.js"> </script>
-		<script type="text/javascript" src="js/soundcloud.player.js"> </script>
+		<script type="text/javascript" src="js/soundspin.js"> </script>
+		<script type="text/javascript" src="js/soundspin.player.js"> </script>
+		<script type="text/javascript" src="js/soundspin.author.js"> </script>
 		<script type="text/javascript">
             $.spin.configure(MainController);
 		</script>
@@ -46,7 +47,7 @@
 		</script>
 	</head>
 	<body/>
-	<script id="SoundSpinPlayerBody" type="text/jtmpl">
+	<script id="SoundSpinPlayer" type="text/jtmpl">
 		<div id="soundspin-container">
 			<div id="player">
 				<div id="indicator">

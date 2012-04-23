@@ -14,7 +14,8 @@
 		this.options = options || {};
 		var self = this;
 		
-
+		this.element.append(JTmpl.transform('SoundSpinPlayer',{}))
+		
 		this.element.addClass('soundspin-player');
 
 		this.controls      = $('<div class="soundspin-controls"/>').appendTo(this.element);
