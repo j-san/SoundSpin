@@ -8,8 +8,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<!-- <link rel="icon" type="image/png" href="images/kaiten-boxed-favicon.png" sizes="16x16"> -->
 
-		<link rel="stylesheet" type="text/css" href="Spin.js/addons/breadcrumb/breadcrumb.css" />
-		<link rel="stylesheet" type="text/css" href="Spin.js/addons/items/items.css" />
+		<link rel="stylesheet" type="text/css" href="../lib/Spin.js/addons/breadcrumb/breadcrumb.css" />
+		<link rel="stylesheet" type="text/css" href="../lib/Spin.js/addons/navigation/navigation.css" />
 		<link rel="stylesheet" type="text/css" href="css/soundcloud.css" />
 
 
@@ -18,15 +18,16 @@
 
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.js"> </script>
 
-		<script type="text/javascript" src="Spin.js/addons/breadcrumb/breadcrumb.js"> </script>
-		<script type="text/javascript" src="Spin.js/addons/items/items.js"> </script>
-		<script type="text/javascript" src="Spin.js/src/js/Spin.js"> </script>
-		<script type="text/javascript" src="lib/JPath/src/JPath.js"> </script>
-		<script type="text/javascript" src="lib/JTmpl/src/JTmpl.js"> </script>
+		<script type="text/javascript" src="../lib/Spin.js/addons/breadcrumb/breadcrumb.js"> </script>
+		<script type="text/javascript" src="../lib/Spin.js/addons/navigation/navigation.js"> </script>
+		<script type="text/javascript" src="../lib/Spin.js/src/js/Spin.js"> </script>
+		<script type="text/javascript" src="../lib/JPath/src/JPath.js"> </script>
+		<script type="text/javascript" src="../lib/JTmpl/src/JTmpl.js"> </script>
 
 
-		<script type="text/javascript" src="js/soundcloud.js"> </script>
-		<script type="text/javascript" src="js/soundcloud.player.js"> </script>
+		<script type="text/javascript" src="js/soundspin.js"> </script>
+		<script type="text/javascript" src="js/soundspin.player.js"> </script>
+		<script type="text/javascript" src="js/soundspin.author.js"> </script>
 		<script type="text/javascript">
             $.spin.configure(MainController);
 		</script>
@@ -46,7 +47,7 @@
 		</script>
 	</head>
 	<body/>
-	<script id="SoundSpinPlayerBody" type="text/html">
+	<script id="SoundSpinPlayer" type="text/jtmpl">
 		<div id="soundspin-container">
 			<div id="player">
 				<div id="indicator">
@@ -57,14 +58,24 @@
 					<div id="progress-bar"/>
 				</div>
 				<div id="control-next" class="control">&gt;&gt;</div>
-				<div id="control-clear" class="control">Clear</div>
 				<div id="info" class="nav spin-item">
 					<p id="author"/>
 					<p id="title"/>
 					<p id="duration"/>
 				</div>
 			</div>
-			<ol class="play-list spin-items"/>
+			<div id="control-meta">
+				<a>Clear playlist</a>
+				<a>Playlist history</a>
+				<a>About</a>
+			</div>
+			<nav class="play-list spin-items"/>
 		</div>
+	</script>
+	<script id="SoundNav" type="text/jtmpl">
+		<a class="sound">
+			<h1>Title</h1>
+			<p>Author</p>
+		</a>
 	</script>
 </html>
