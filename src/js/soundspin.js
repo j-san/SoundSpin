@@ -12,15 +12,18 @@
 	});
 	
 	window.MainController = function(ressource){
-		if(typeof location == 'string') {
-			var params = location.split('/');
-		} else {
-			var params = (ressource.prop('href') || 'home').split('/');
-		}
-		var panelType = params.shift();
-		console.log(panelType);
+		console.log('loading '+ressource);
+		_gaq.push(['_trackEvent', 'loadpanel', (ressource ? ressource.split('/') : 'home'), ressource]);
+
 		var $body;
-		_gaq.push(['_trackEvent', 'loadpanel', panelType]);
+		
+		for(var panel in panels){
+			var params;
+			if(params = panel['match'].match(ressource)){
+				var params = 
+			}
+		}
+
 		if(!$player) {
 			$body = Home();
 		} else if(panelType == 'songwriterDetails') {
@@ -41,6 +44,28 @@
 		$panel = $.spin($body);
 	};
 
+	var panels = [
+		{
+			'match':'user/(\d+)'
+			'function':songwriterDetails
+		},
+		{
+			'match':'users'
+			'function':songwriterSearch
+		},
+		{
+			'match':'favories'
+			'function':favorites
+		},
+		{
+			'match':'user/tracks'
+			'function':allTracks
+		},
+		{
+			'match':'user/album/(\d+)'
+			'function':albumDetails
+		}
+	]
 
 	SC.initialize({
       client_id: client_id,
