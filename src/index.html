@@ -25,11 +25,13 @@
 		<script type="text/javascript" src="../lib/JTmpl/src/JTmpl.js"> </script>
 
 
-		<script type="text/javascript" src="js/soundspin.js"> </script>
 		<script type="text/javascript" src="js/soundspin.player.js"> </script>
 		<script type="text/javascript" src="js/soundspin.author.js"> </script>
+		<script type="text/javascript" src="js/soundspin.js"> </script>
 		<script type="text/javascript">
-            $.spin.configure(MainController);
+            $.spin.configure(function(elem){
+                MainController(elem.data('ressource'));
+            });
 		</script>
 		
 		<script type="text/javascript">
@@ -48,32 +50,30 @@
 	</head>
 	<body/>
 	<script id="SoundSpinPlayer" type="text/jtmpl">
-		<div id="soundspin-container">
-			<div id="player">
-				<div id="indicator">
-					<div id="control-play" class="control">&gt;</div>
-					<div id="avatar">
+		<div id="player">
+			<div id="play-zone">
+                <div id="control">
+					<div id="control-play" class="control"></div>
+					<div id="current-artwork">
 						<img/>
 					</div>
 					<div id="progress-bar"/>
-				</div>
-				<div id="control-next" class="control">&gt;&gt;</div>
-				<div id="info" class="nav spin-item">
-					<p id="author"/>
-					<p id="title"/>
-					<p id="duration"/>
-				</div>
+                    <div id="control-next" class="control"></div>
+                </div>
+                
+				<nav id="current-track">
+				</nav>
 			</div>
-			<div id="control-meta">
-				<a>Clear playlist</a>
-				<a>Playlist history</a>
+			<div id="control-more">
+				<button>Clear playlist</button>
+				<button>Playlist history</button>
 				<a>About</a>
 			</div>
 			<nav class="play-list spin-items"/>
 		</div>
 	</script>
 	<script id="SoundNav" type="text/jtmpl">
-		<a class="sound">
+		<a class="sound" attr="{'href':'target'}">
 			<h1>Title</h1>
 			<p>Author</p>
 		</a>

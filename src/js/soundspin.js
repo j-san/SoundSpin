@@ -12,58 +12,46 @@
 	});
 	
 	window.MainController = function(ressource){
-		console.log('loading '+ressource);
-		_gaq.push(['_trackEvent', 'loadpanel', (ressource ? ressource.split('/') : 'home'), ressource]);
+        ressource = (ressource || 'home');
+		console.log('loading ' + ressource);
+		_gaq.push(['_trackEvent', 'loadpanel', ressource]);
 
 		var $body;
 		
-		for(var panel in panels){
-			var params;
-			if(params = panel['match'].match(ressource)){
-				var params = 
-			}
-		}
-
 		if(!$player) {
 			$body = Home();
-		} else if(panelType == 'songwriterDetails') {
-			$body = songwriterDetails(params.shift());
-		} else if(panelType == 'songwriterSearch') {
-			$body = songwriterSearch();
-		} else if(panelType == 'followings') {
-			$body = songwriterFollowings(params.shift());
-		} else if(panelType == 'favorites') {
-			$body = favorites(params.shift());
-		} else if(panelType == 'allTracks') {
-			$body = allTracks(params.shift());
-		} else if(panelType == 'albumDetails') {
-			$body = albumDetails(params.shift(), params.shift());
 		} else {
-			$.error('no panel specified');
-		}
+            for(var panel in panels){
+                var params;
+                if(params = ressource.match(panel['match'])){
+                    $body = panel.render(ressource);
+                }
+            }
+        }
+
 		$panel = $.spin($body);
 	};
 
 	var panels = [
 		{
-			'match':'user/(\d+)'
-			'function':songwriterDetails
+			'match':'user/(\d+)',
+			'render':songwriterDetails
 		},
 		{
-			'match':'users'
-			'function':songwriterSearch
+			'match':'users',
+			'render':songwriterSearch
 		},
 		{
-			'match':'favories'
-			'function':favorites
+			'match':'favories',
+			'render':favorites
 		},
 		{
-			'match':'user/tracks'
-			'function':allTracks
+			'match':'user/tracks',
+			'render':allTracks
 		},
 		{
-			'match':'user/album/(\d+)'
-			'function':albumDetails
+			'match':'user/album/(\d+)',
+			'render':albumDetails
 		}
 	]
 

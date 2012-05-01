@@ -1,29 +1,11 @@
 
 .loading{
-	background: 	url(../img/panel-loader.gif) center center no-repeat;
-	height:			300px;
+	background: url(../img/panel-loader.gif) center center no-repeat;
+	height: 300px;
 }
 
-/* Spin.js theme */
-.spin-item.nav.mouseover,
-.soundspin-player #info:hover{
-/** webkit ********************************************************************/
-    background-image: -webkit-gradient(linear, left top, left bottom,from(#feae31),to(#efe457));
-    -webkit-background-origin: border;
-    -webkit-background-origin: border-box;
-/** gecko *********************************************************************/
-    background-image: -moz-linear-gradient(center top , #feae31, #efe457);
-    -moz-background-origin: border;
-/** no vendor prefix **********************************************************/
-    background-origin: border-box;
-/** shared ********************************************************************/
-    background-repeat: repeat;    
-    background-attachment: scroll; 
-    background-position: 0 0;
-}
 
-.spin-item.nav.loaded,
-.soundspin-player #info.loaded {
+.spin-active {
 	color: white;
     background-image: -moz-linear-gradient(center top , #a10627, #591426);
     background-image: -webkit-gradient(linear, left top, left bottom,from(#a10627),to(#591426));
@@ -38,58 +20,55 @@
 	background: -moz-linear-gradient(center top , #a10627, #591426) repeat scroll 0 0 #591426 !important;
 }
 
-/* end Spin.js theme */
-
-/* SoundCloud songs player */
-.soundspin-controls{
-    position: 		relative;
-	width:			100%;
-	height: 		150px;
-	border-top: 	#999 solid 1px;
+/* SoundCloud tracks player */
+#play-zone {
+    position: relative;
+	width: 100%;
+	height: 150px;
+	border-top: #999 solid 1px;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
-	background-color: #feae31;/*aubergine*/
-}
-.soundspin-controls .control{
-/*
-	background-color:	black;
-	background-clip:	padding-box;
-	color:			white;
-	font-weight:	bold;
-	text-align:		center;
-	vertical-align:	middle;
-	text-decoration:none;
-	border: 		3px solid red;
-*/
-    position:		absolute;
-	cursor:			pointer;
-	z-index: 10;
+	background-color: #feae31;
 }
 
-.soundspin-player .indicator{
-    position:		absolute;
-	line-height: 	0;
-    left:			24px;
-    top:			16px;
-	cursor:			pointer;
+#control {
+    position: absolute;
+	line-height: 0;
+    left: 24px;
+    top: 16px;
+	cursor: pointer;
 }
-.soundspin-player div.indicator .play{
-	/*display:		none;*/
-	background-image:url(../img/play.png);
+
+.control {
+    position: absolute;
+    z-index: 10
+}
+
+#control-play{
+	/*display: none;*/
+	background-image: url(../img/play.png);
 	top: -12px;
     left: -16px;
 	width: 32px;
 	height: 32px;
 }
 
-.soundspin-player div.indicator.playing .play{
+.playing #control-play {
 	background-image:url(../img/pause.png);
 }
 
-.soundspin-player #avatar{
+#control-next{
+	background-image:url(../img/ff.png);
+	bottom: -26px;
+    right: -8px;
+	width: 50px;
+	height: 50px;
+}
+
+#current-artwork {
 	position: relative;
-	min-height: 100px; 
+	min-height: 100px;
 	min-width: 100px;
 	z-index: 5;
 	overflow: hidden;
@@ -102,7 +81,7 @@
 	border-top-left-radius: 0;
 }
 
-.soundspin-player #avatar img{
+#current-artwork img {
 	-webkit-border-radius: 7px;
 	-webkit-border-top-left-radius: 0;
 	-moz-border-radius: 7px;
@@ -110,50 +89,9 @@
 	border-radius: 7px;
 	border-top-left-radius: 0;
 }
-.soundspin-player .clear{
-    position: absolute;
-	right: 65px;
-	bottom: 3px;
-	padding: 2px 5px;
-	font-size: .8em;
 
-	border: 2px solid red;
-	-webkit-border-radius: 12px;
-	-moz-border-radius:    12px;
-	border-radius:         12px;
-}
-
-.soundspin-player .next{
-	background-image:url(../img/ff.png);
-	bottom: 15px;
-    right: 14px;
-	width: 50px;
-	height: 50px;
-}
-
-.quick-nav{
-	position: relative;
-	text-align: center;
-	padding-right: 26px;
-}
-.quick-nav .see-more{
-	border-left: #999 solid 1px;
-	height: auto;
-	position: absolute;
-	/*float:right;*/
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: 26px;
-}
-
-.panel-image-view{
-	text-align: center;
-}
-
-
-/* progress bar */
-.soundspin-player .indicator .progress-bar-container{
+/* progress indicator */
+#progress {
 	background-color:white;
 	position: absolute;
     left: -6px;
@@ -170,11 +108,11 @@
 	border-radius: 14px;
 	border-top-left-radius: 0;
 }
-.soundspin-player .indicator:hover .progress-bar-container,
-.soundspin-player .indicator.playing .progress-bar-container{
+.control:hover #progress,
+.playing #progress {
 	display: block;
 }
-.soundspin-player .indicator .progress-bar-container .bar{
+#progress .bar {
 	position: absolute; 
 	height: 67%; 
 	width: 2px;
@@ -184,7 +122,7 @@
 	-webkit-transform-origin: 0 0;
 }
 
-.soundspin-player #info{
+#current-track {
     position: absolute;
     left: 140px;
     top: 10px;
@@ -202,22 +140,61 @@
 	-moz-border-radius: 	8px;
 	border-radius: 			8px;
 	border: 				1px solid #888;
-	box-shadow: 			10px 10px 70px #888;
-	-moz-box-shadow:		10px 10px 70px #888;
-	-webkit-box-shadow:		10px 10px 70px #888;
+	box-shadow: 			10px 10px 70px #888 inset;
+	-moz-box-shadow:		10px 10px 70px #888 inset;
+	-webkit-box-shadow:		4px 4px 10px #888 inset;
 }
 
-.soundspin-player #info p {
+#current-track a:hover{
+/** webkit ********************************************************************/
+    background-image: -webkit-gradient(linear, left top, left bottom,from(#feae31),to(#efe457));
+    -webkit-background-origin: border;
+    -webkit-background-origin: border-box;
+/** gecko *********************************************************************/
+    background-image: -moz-linear-gradient(center top , #feae31, #efe457);
+    -moz-background-origin: border;
+/** no vendor prefix **********************************************************/
+    background-origin: border-box;
+/** shared ********************************************************************/
+    background-repeat: repeat;    
+    background-attachment: scroll; 
+    background-position: 0 0;
+}
+
+
+#current-track p {
 	margin-bottom:6px;
 }
 
-.soundspin-player #author {
+#current-track #author {
     font-weight:	bold;
 	color: 			red;
 	font-size: 		1.6em;
 	text-shadow:	black 2px 2px 1.5px;
 }
 
+
+
+.quick-nav {
+	position: relative;
+	text-align: center;
+	padding-right: 26px;
+}
+
+.quick-nav .see-more {
+	border-left: #999 solid 1px;
+	height: auto;
+	position: absolute;
+	/*float:right;*/
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 26px;
+}
+
+.panel-image-view {
+	text-align: center;
+}
 
 /* song writter info panel */
 .songwriter-info{
@@ -382,7 +359,7 @@ p {
 	right:7px;
 	width: 10px;
 	height: 100%;
-	background: url('../Spin.js/addons/items/item-arrow-black.png') no-repeat center right;
+	background: url('../../lib/Spin.js/addons/navigation/arrow.png') no-repeat center right;
 }
 
 .spin-icon {
@@ -420,21 +397,3 @@ p {
 	border-right: 1px solid #999;
 }
 
-/*
-. {
- 
-top: 0px;
-width: 100%;
-height: 2.5em;
-text-align: center;
-	font-size:1.3em;
-    height:1.6em; height : 2.1em but font-size change for 1.3em => height => 2.1 / 1.3em 
-	line-height:1.6em;
-	vertical-align:middle;
-	white-space:nowrap;
-	overflow:hidden;
-	color:white;
-    background: -moz-linear-gradient(center top , #999, #222) repeat scroll 0 0 #222;    
-    background: -webkit-gradient(linear, left top, left bottom,from(#999),to(#222)) repeat scroll 0 0 #222;
-}
-*/

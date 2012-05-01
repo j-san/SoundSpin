@@ -14,11 +14,12 @@
 		this.options = options || {};
 		var self = this;
 		
-		this.element.append(JTmpl.transform('SoundSpinPlayer',{}))
+		this.element.append(JTmpl.call('SoundSpinPlayer'))
 		
 		this.element.addClass('soundspin-player');
 
-		this.controls      = $('<div class="soundspin-controls"/>').appendTo(this.element);
+		//this.controls      = $('<div class="soundspin-controls"/>').appendTo(this.element);
+		this.avatar        = $('<div class="indicator"><div class="control play"></div><div id="avatar"><img/></div></div>').appendTo(this.controls);
 		this.avatar        = $('<div class="indicator"><div class="control play"></div><div id="avatar"><img/></div></div>').appendTo(this.controls);
 		this.animContainer = $('<div class="progress-bar-container"></div>').appendTo(this.avatar);
 
