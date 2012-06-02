@@ -1,59 +1,16 @@
 
 
 (function() {
-	var client_id = 'u9MitXmAQmMLJPiKtFHiQ',
+	var soundspin = {
+            views: {}
+        }, // namespace declatration
+        client_id = 'u9MitXmAQmMLJPiKtFHiQ',
 		$player,
 		player,
 		this_application_url = 'http://j-san.github.com/SoundSpin/';
 
+    soundspin.views = {};
 
-	$(window).bind('hashchange',function(){
-		MainController(location.hash);
-	});
-	
-	window.MainController = function(ressource){
-        ressource = (ressource || 'home');
-		console.log('loading ' + ressource);
-		_gaq.push(['_trackEvent', 'loadpanel', ressource]);
-
-		var $body;
-		
-		if(!$player) {
-			$body = Home();
-		} else {
-            for(var panel in panels){
-                var params;
-                if(params = ressource.match(panel['match'])){
-                    $body = panel.render(ressource);
-                }
-            }
-        }
-
-		$panel = $.spin($body);
-	};
-
-	var panels = [
-		{
-			'match':'user/(\d+)',
-			'render':songwriterDetails
-		},
-		{
-			'match':'users',
-			'render':songwriterSearch
-		},
-		{
-			'match':'favories',
-			'render':favorites
-		},
-		{
-			'match':'user/tracks',
-			'render':allTracks
-		},
-		{
-			'match':'user/album/(\d+)',
-			'render':albumDetails
-		}
-	]
 
 	SC.initialize({
       client_id: client_id,
@@ -61,6 +18,95 @@
     });
 
 
+    soundspin.AppRouter = Backbone.Router.extend({
+        routes: {
+            "musicians"            : "musicianSearch",
+            "musician/:id"         : "musicianDetails",
+            "musician/:id/favories": "musicianFavorites",
+            "musician/:id/tracks"  : "musicianTracks",
+            "album/:id"          : "albumDetails"
+        },
+        authorDetails: function (id) {
+            console.log('authorDetails',id);
+        }
+    });
+
+
+    soundspin.views.Home = Backbone.View.extend({
+        tagName: "article",
+        className: "home",
+
+        events: {
+            "click #connection": "connect"
+        },
+
+        render: function() {
+            this.$el.append(JTmpl.call('Home'));
+
+            soundspin.player = new soundspin.views.SoundSpinPlayer({el: this.$('#player')});
+            soundspin.playlist = new soundspin.views.SoundSpinPlaylist({el: this.$('#playlist')});
+
+            return this;
+        },
+        
+        function() {
+            if(SC.isConnected()) {
+                this.$el.addClass('connected');
+
+                this.loadFollowings();
+
+                SC.get('/me/activities', {}, function(data) {
+                    var i, showed = [];
+                    
+                    for(i in data.collection) {
+                        var activity = data.collection[i];
+                        if (activity.origin.track && showed.indexOf(activity.origin.track.id) < 0) {
+                            var track = activity.origin.track;
+                            if(!track.user) {
+                                track.user = activity.origin.user;
+                            }
+                            soundspin.playerlist.addTrack(track, track.user);
+                            showed.push(activity.origin.track.id);
+                        }
+                    }
+                    $player.appendTo($body);
+                });
+            }else{
+                // get some sample random tracks
+                SC.get('/tracks',{limit:10},function(data){
+                    $player = $('<div/>');
+                    player = new SoundSpinPlayer($player,{tracks:data});
+                    $player.appendTo($body);
+                });
+            }
+
+            return $body;
+        },
+        function connect() {
+            SC.connect(function(){
+                loadFollowings();
+            });
+        },
+		function loadFollowings(){
+			SC.get('/me/followings',{},function(data){
+				console.log('followings', data);
+				if($connect){
+					$connect.remove();
+				}
+				$.each(data, function(ind,author){
+                    var img = author.avatar_url.replace(/large\.(\w{3})/,'badge.$1');
+					$('<img class="nav" title="' + author.username + '" src="' + img + '"/>')
+							.data({
+								panelType: 'songwriterDetails',
+								user: author
+							})
+							.prependTo($block);
+				});
+			});
+		}
+    });
+
+/*
 	$(function(){
 		$(document.body).delegate('img.resizable','click',function(){
 			if(this.src.indexOf('default_avatar_large.png')>=0){
@@ -72,9 +118,10 @@
 			var $panel = $.spin($body, 'img');
 		});
 	});
+*/
 
 
-	var Home = function(){
+	soundspin.Home = function(){
 		var self = this;
 
 		var $body = $('<div class="body"/>');
@@ -283,14 +330,17 @@
 	}
 
 
+	window.soundspin = soundspin; // namespace publication
+
+
 	window.Items = {
 		navigable:function(options){
 			return $(
-			'<li class="spin-item nav" title="' + (options.title || '') + '">\
+			'<a href="#user/123" title="' + (options.title || '') + '">\
 				' + (options.icon? '<img class="spin-icon" src="' + options.icon + '" />': '') + '\
 				<span class="spin-right">' + (options.info || '') + '</span>\
 				' + (options.title || '') + '\
-			</li>');
+			</a>');
 		},
 		clickable:function(options){
 			return $(

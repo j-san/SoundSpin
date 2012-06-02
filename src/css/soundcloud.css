@@ -33,10 +33,12 @@
 }
 
 #control {
-    position: absolute;
+    position: relative;
+    display: inline-block;
+    height: 100px;
+    width:100px;
 	line-height: 0;
-    left: 24px;
-    top: 16px;
+    margin: 16px 24px 32px;
 	cursor: pointer;
 }
 

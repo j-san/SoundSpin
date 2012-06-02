@@ -12,28 +12,67 @@
 		<link rel="stylesheet" type="text/css" href="../lib/Spin.js/addons/navigation/navigation.css" />
 		<link rel="stylesheet" type="text/css" href="css/soundcloud.css" />
 
-
-
 		<script src="http://connect.soundcloud.com/sdk.js" type="text/JavaScript"> </script>
 
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.js"> </script>
+		<script type="text/javascript" src="http://underscorejs.org/underscore.js"> </script>
+		<script type="text/javascript" src="http://backbonejs.org/backbone.js"> </script>
+		<script type="text/javascript" src="../lib/JPath/src/JPath.js"> </script>
+		<script type="text/javascript" src="../lib/JTmpl/src/JTmpl.js"> </script>
 
 		<script type="text/javascript" src="../lib/Spin.js/addons/breadcrumb/breadcrumb.js"> </script>
 		<script type="text/javascript" src="../lib/Spin.js/addons/navigation/navigation.js"> </script>
 		<script type="text/javascript" src="../lib/Spin.js/src/js/Spin.js"> </script>
-		<script type="text/javascript" src="../lib/JPath/src/JPath.js"> </script>
-		<script type="text/javascript" src="../lib/JTmpl/src/JTmpl.js"> </script>
 
 
+		<script type="text/javascript" src="js/soundspin.js"> </script>
 		<script type="text/javascript" src="js/soundspin.player.js"> </script>
 		<script type="text/javascript" src="js/soundspin.author.js"> </script>
-		<script type="text/javascript" src="js/soundspin.js"> </script>
+
 		<script type="text/javascript">
+            soundspin.app = new soundspin.AppRouter();
+            Backbone.history.start();
+
+
             $.spin.configure(function(elem){
-                MainController(elem.data('ressource'));
+                $.spin(new soundspin.views.Home().render().$el);
             });
 		</script>
-		
+
+        <script id="Home" type="text/jtmpl">
+            <div id="player" data-jtp-call="Player">
+            </div>
+            <div id="more-options">
+                <button id="#connection">Connect with soundCloud account</button>
+                <button>Clear playlist</button>
+                <button>Playlist history</button>
+                <a href="#about">About</a>
+                <a href="#musicians" class="nav spin-item see-more" title="Search artists"></a>
+            </div>
+            <nav id="playlist" class="spin-items"/>
+        </script>
+        <script id="Player" type="text/jtmpl">
+            <div id="control">
+                <div id="control-play" class="control"></div>
+                <div id="current-artwork">
+                    <img/>
+                </div>
+                <div id="progress-bar"/>
+                <div id="control-next" class="control"></div>
+            </div>
+            
+            <nav id="current-track">
+            </nav>
+        </script>
+        <script id="Track" type="text/jtmpl">
+            <a class="sound" attr="{'href':'target'}">
+                <h1>Title</h1>
+                <p>Author</p>
+            </a>
+        </script>
+
+
+
 		<script type="text/javascript">
 
 		  var _gaq = _gaq || [];
@@ -49,33 +88,4 @@
 		</script>
 	</head>
 	<body/>
-	<script id="SoundSpinPlayer" type="text/jtmpl">
-		<div id="player">
-			<div id="play-zone">
-                <div id="control">
-					<div id="control-play" class="control"></div>
-					<div id="current-artwork">
-						<img/>
-					</div>
-					<div id="progress-bar"/>
-                    <div id="control-next" class="control"></div>
-                </div>
-                
-				<nav id="current-track">
-				</nav>
-			</div>
-			<div id="control-more">
-				<button>Clear playlist</button>
-				<button>Playlist history</button>
-				<a>About</a>
-			</div>
-			<nav class="play-list spin-items"/>
-		</div>
-	</script>
-	<script id="SoundNav" type="text/jtmpl">
-		<a class="sound" attr="{'href':'target'}">
-			<h1>Title</h1>
-			<p>Author</p>
-		</a>
-	</script>
 </html>
