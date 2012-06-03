@@ -198,8 +198,24 @@
 	text-align: center;
 }
 
-/* song writter info panel */
-.songwriter-info{
+/* mesician info panel */
+.mesician-description label {
+    vertical-align: top;
+    display: inline-block;
+    width: 80px;
+    text-align: right;
+}
+
+.mesician-description strong {
+    vertical-align: top;
+    display: inline-block;
+}
+
+.follow.waiting::before {
+    content: 'loading...';
+}
+.follow.waiting button {
+    display: none;
 }
 
 .description::first-letter{
@@ -319,15 +335,18 @@ p {
 	margin-bottom:0.4em;
 }
 
+nav.side-nav {
+    float: right;
+}
 
 
 
 /* Spin.js style overwrite */
-.block-content{
+.block-content {
 	padding:10px;
 }
 
-.nav{
+.nav {
 	cursor:pointer;
 }
 

@@ -26,22 +26,16 @@
             }));
         },
         
-        addTracks: function(tracks){
+        addTracks: function(tracks) {
             var self = this;
             $.each(tracks,function(ind,track){
-                self.playlist.append(
-                    Items.navigable({
-                        icon: (track.artwork_url ? track.artwork_url.replace(/large\.(\w{3})/,'small.$1') : ''),
-                        title: track.title,
-                        info: track.user.username
-                    }).data({
-                        panelType: 'songwriterDetails',
-                        track: track,
-                        user: track.user
-                    }).attr('id',track.id)
-                );
+                self.addTrack(track, track.user);
             });
         },
+        
+        shiftTrack: function() {
+            return this.$el.first().remove();
+        }
     });
 	
 	soundspin.views.SoundSpinPlayer = Backbone.View.extend({
@@ -67,8 +61,8 @@
         
         _next: function () {
             // this._stop();
-            var item = this.playlist.children().first();
-            if(!item.size()){
+            var item = soundspin.playlist.shiftTrack();
+            if(!item.length) {
                 return;
             }
 

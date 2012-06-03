@@ -30,26 +30,27 @@
 		<script type="text/javascript" src="js/soundspin.author.js"> </script>
 
 		<script type="text/javascript">
-            soundspin.app = new soundspin.AppRouter();
-            Backbone.history.start();
-
-
             $.spin.configure(function(elem){
                 $.spin(new soundspin.views.Home().render().$el);
+            });
+
+            $(function() {
+                soundspin.app = new soundspin.AppRouter();
+                Backbone.history.start();
             });
 		</script>
 
         <script id="Home" type="text/jtmpl">
             <div id="player" data-jtp-call="Player">
             </div>
-            <div id="more-options">
+            <nav id="more-options">
                 <button id="#connection">Connect with soundCloud account</button>
                 <button>Clear playlist</button>
                 <button>Playlist history</button>
                 <a href="#about">About</a>
-                <a href="#musicians" class="nav spin-item see-more" title="Search artists"></a>
-            </div>
-            <nav id="playlist" class="spin-items"/>
+                <a href="#musicians" class="see-more" title="Search artists">Search artists</a>
+            </nav>
+            <nav id="playlist" class="spin-list"/>
         </script>
         <script id="Player" type="text/jtmpl">
             <div id="control">
@@ -65,12 +66,34 @@
             </nav>
         </script>
         <script id="Track" type="text/jtmpl">
-            <a class="sound" attr="{'href':'target'}">
-                <h1>Title</h1>
-                <p>Author</p>
+            <a class="sound" data-jtp-attr='{"href":"target"}'>
+                <h1 data-jtp-select="track/title">Title</h1>
+                <p data-jtp-select="track/user/username">Author</p>
             </a>
         </script>
 
+        <script id="MusicianDetails" type="text/jtmpl">
+            <nav class="side-nav spin-list">
+                <a><span data-jtp-select="user/public_favorites_count"></span> Favorites</a>
+                <a><span data-jtp-select="user/followings_count"></span> Followings</a>
+            </nav>
+            <section class="block-content mesician-description">
+                <h1 data-jtp-select="user/full_name">user name</h1>
+                <img class="resizable extended-artwork" data-jtp-attr='{"src":"avatar"}' />
+
+                <p class="follow loading"><button class="unfollowed">Follow</button><button class="followed">Unfollow</button></p>
+
+                <p data-jtp-test="user/country"><label>Country</label> <strong data-jtp-select="user/country"></strong></p>
+                <p data-jtp-test="user/city"><label>City</label> <strong data-jtp-select="user/city"></strong></p>
+                <p data-jtp-test="user/discogs_name"><label>Dicogs</label> <strong data-jtp-select="user/discogs_name"></strong></p>
+                <p data-jtp-test="user/myspace_name"><label>MySpace</label> <strong data-jtp-select="user/myspace_name"></strong></p>
+                <p data-jtp-test="user/website"><a data-jtp-attr='{"href": "user/website"}' data-jtp-select="user/website_title">website</a></p>
+
+                <a data-jtp-attr='{"href":"user/permalink_url"}' target="_blank">See on Soundcloud</a>
+
+                <p class="description" data-jtp-select="user/description"></p>
+            </section>
+        </script>
 
 
 		<script type="text/javascript">

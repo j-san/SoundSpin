@@ -26,8 +26,11 @@
             "musician/:id/tracks"  : "musicianTracks",
             "album/:id"          : "albumDetails"
         },
-        authorDetails: function (id) {
-            console.log('authorDetails',id);
+        musicianDetails: function (id) {
+            $.spin(new soundspin.views.MusicianDetails({userId: id}).render().$el);
+        },
+        musicianSearch: function (id) {
+            $.spin(new soundspin.views.MusicianSearch().render().$el);
         }
     });
 
@@ -43,13 +46,9 @@
         render: function() {
             this.$el.append(JTmpl.call('Home'));
 
-            soundspin.player = new soundspin.views.SoundSpinPlayer({el: this.$('#player')});
+            soundspin.player   = new soundspin.views.SoundSpinPlayer({el: this.$('#player')});
             soundspin.playlist = new soundspin.views.SoundSpinPlaylist({el: this.$('#playlist')});
 
-            return this;
-        },
-        
-        function() {
             if(SC.isConnected()) {
                 this.$el.addClass('connected');
 
@@ -65,29 +64,26 @@
                             if(!track.user) {
                                 track.user = activity.origin.user;
                             }
-                            soundspin.playerlist.addTrack(track, track.user);
                             showed.push(activity.origin.track.id);
+                            soundspin.playlist.addTrack(track, track.user);
                         }
                     }
-                    $player.appendTo($body);
                 });
             }else{
                 // get some sample random tracks
                 SC.get('/tracks',{limit:10},function(data){
-                    $player = $('<div/>');
-                    player = new SoundSpinPlayer($player,{tracks:data});
-                    $player.appendTo($body);
+                    soundspin.playlist.addTracks(data);
                 });
             }
 
-            return $body;
+            return this;
         },
-        function connect() {
+        connect: function() {
             SC.connect(function(){
-                loadFollowings();
+                this.loadFollowings();
             });
         },
-		function loadFollowings(){
+		loadFollowings: function() {
 			SC.get('/me/followings',{},function(data){
 				console.log('followings', data);
 				if($connect){
@@ -103,10 +99,116 @@
 							.prependTo($block);
 				});
 			});
-		}
+		},
+        follow: function() {
+            this.$el.addClass('followed');
+            this.$('.follow').addClass('loading');
+            if(this.followed){
+                SC.delete('/me/followings/' + user.id, function(data){
+                    this.$('.follow').removeClass('loading');
+                    this.$el.addClass('followed');
+                    this.followed = false;
+                });
+            } else {
+                SC.put('/me/followings/' + user.id, function(data){
+                    this.$('.follow').removeClass('loading');
+                    this.$el.addClass('followed');
+                    this.followed = true;
+                });
+            }
+        }
+    });
+
+
+    soundspin.views.MusicianDetails = Backbone.View.extend({
+        tagName: "article",
+        className: "musician-details",
+
+        events: {
+        },
+
+        render: function() {
+            var self = this;
+            SC.get('/users/' + this.options.userId, {}, function(user){
+                console.log('user' , user);
+                self.$el.append(JTmpl.call('MusicianDetails',{
+                    user: user,
+                    avatar: user.avatar_url.replace('large','t300x300')
+                }));
+            });
+            
+            return this;
+        }
     });
 
 /*
+                $block.removeClass('loading');
+                $block.append('<a href="' + user.permalink_url + '" target="_blank">Voir sur Soundcloud</a>');
+                $block.append('<h1>' + (user.full_name || user.username) + '</h1>');
+                $block.append('<img class="resizable extended-artwork" src="' + user.avatar_url.replace('large','t300x300') + '" />');
+                if(user.description){
+                    $block.append('<p class="description">' + user.description + '</p>');
+                }
+                $('<li class="spin-item nav">' + user.public_favorites_count + ' Favorites</li>')
+                        .data({
+                            panelType: 'favorites',
+                            user: user
+                        }).appendTo($blockNav);
+                $('<li class="spin-item nav">' + user.followings_count + ' Followings</li>')
+                        .data({
+                            panelType: 'followings',
+                            user: user
+                        })
+                        .appendTo($blockNav);
+
+                var $info = $('<div class="songwriter-info"/>').appendTo($block);
+                
+                function info(label, name){
+                    if(user[name]){
+                        $info.append('<p>' + label + ' <strong>' + user[name] + '</strong></p>');
+                    }
+                }
+                info('Dicogs', 'discogs_name');
+                info('Myspace', 'myspace_name');
+                info('Country', 'country');
+                info('City', 'city');
+
+                if(user.website){
+                    $info.append('<p><a href="' + user.website + '">' + (user.website_title || user.website) + '</a></p>');
+                }
+
+                if(SC.isConnected()){
+                    $follow = $('<button>Follow</button>')
+                            .data('follow',false)
+                            .attr('disabled',true)
+                            .appendTo($info);
+
+                    $follow.click(function(){
+                        $follow.attr('disabled',true);
+                        if($follow.data('follow')){
+                            SC.delete('/me/followings/' + user.id, function(data){
+                                $follow.removeAttr('disabled');
+                                $follow.text('Follow');
+                                $follow.data('follow',false);
+                            });
+                        } else {
+                            SC.put('/me/followings/' + user.id, function(data){
+                                $follow.removeAttr('disabled');
+                                $follow.text('Unfollow');
+                                $follow.data('follow',true);
+                            });
+                        }
+                    });
+
+                    SC.get('/me/followings/' + user.id, function(error){
+                        $follow.removeAttr('disabled');
+                        if(!error) {
+                            $follow.data('follow',true);
+                            $follow.text('Unfollow');
+                        }
+                    });
+                }
+
 	$(function(){
 		$(document.body).delegate('img.resizable','click',function(){
 			if(this.src.indexOf('default_avatar_large.png')>=0){
@@ -120,73 +222,6 @@
 	});
 */
 
-
-	soundspin.Home = function(){
-		var self = this;
-
-		var $body = $('<div class="body"/>');
-
-		var $block = $('<div class="quick-nav"/>');
-		$body.prepend($block);
-		$('<div class="nav spin-item see-more" title="Search artists"></div>').appendTo($block)
-				.data({panelType: 'songwriterSearch'});
-		
-		var $connect;
-		function loadFollowings(){
-			SC.get('/me/followings',{},function(data){
-				console.log('followings',data);
-				if($connect){
-					$connect.remove();
-				}
-				$.each(data, function(ind,author){
-					$('<img class="nav" title="' + author.username + '" src="' + author.avatar_url.replace(/large\.(\w{3})/,'badge.$1') + '"/>')
-							.data({
-								panelType: 'songwriterDetails',
-								user: author
-							})
-							.prependTo($block);
-				});
-			});
-		}
-		
-		if(!SC.isConnected()){
-			$connect = $('<button>connect</button>').click(function(){
-				SC.connect(function(){
-					loadFollowings();
-				});
-			});
-			$block.append($connect);
-
-			// get some sample random tracks
-			SC.get('/tracks',{limit:10},function(data){
-				$player = $('<div/>');
-				player = new SoundSpinPlayer($player,{tracks:data});
-				$player.appendTo($body);
-			});
-		}else{
-			loadFollowings();
-			var showed = [];
-			SC.get('/me/activities',{},function(data) {
-				console.log(data.collection);
-				$player = $('<div/>');
-				player = new SoundSpinPlayer($player);
-				for(var i in data.collection){
-					var activity = data.collection[i];
-					if(activity.origin.track && showed.indexOf(activity.origin.track.id) < 0){
-						var track = activity.origin.track;
-						if(!track.user) {
-							track.user = activity.origin.user;
-						}
-						player.addTrack(track, track.user);
-						showed.push(activity.origin.track.id);
-					}
-				}
-				$player.appendTo($body);
-			});
-		}
-
-		return $body;
-	};
 
 
 	var albumDetails = function(album,user){
